@@ -9,7 +9,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in posts.data" :key="item">
+
+        <tr v-for="item in result.posts.data" :key="item">
           <td>{{ item.id }}</td>
           <td>{{ item.title }}</td>
         </tr>
@@ -19,12 +20,10 @@
   </div>
 </template>
 <script>
-import gql from "graphql-tag";
-export default {
-  name: 'HomeComp',
-  apollo: {
-    posts: {
-      query: gql`
+import gql from 'graphql-tag'
+import { useQuery } from '@vue/apollo-composable'
+
+const CHARACTERS_QUERY = gql`
         query (
           $options: PageQueryOptions
         ) {
@@ -36,13 +35,41 @@ export default {
           }
         }
       `
-    },
-
-  },
-  data() {
+export default {
+  name: 'App',
+  setup () {
+    const { result, loading, error } = useQuery(CHARACTERS_QUERY);
     return {
-      posts: []
-    };
+      result,
+      loading,
+      error
+    }
   }
-};
+}
+// import gql from "graphql-tag";
+// export default {
+//   name: 'HomeComp',
+//   apollo: {
+//     posts: {
+//       query: gql`
+//         query (
+//           $options: PageQueryOptions
+//         ) {
+//           posts(options: $options) {
+//             data {
+//               id
+//               title
+//             }
+//           }
+//         }
+//       `
+//     },
+//
+//   },
+//   data() {
+//     return {
+//       posts: []
+//     };
+//   },
+// };
 </script>

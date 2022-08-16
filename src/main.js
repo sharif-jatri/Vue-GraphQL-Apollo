@@ -1,8 +1,21 @@
-import { createApp } from 'vue'
+import { createApp, provide, h } from 'vue'
+import { DefaultApolloClient } from '@vue/apollo-composable'
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import App from './App.vue'
-import * as apolloProvider from './apollo.provider'
 
-const app = createApp(App)
+const cache = new InMemoryCache()
 
-app.use(apolloProvider.provider);
+const apolloClient = new ApolloClient({
+    cache,
+    uri: 'https://graphqlzero.almansi.me/api',
+})
+
+const app = createApp({
+    setup () {
+        provide(DefaultApolloClient, apolloClient)
+    },
+
+    render: () => h(App),
+})
+
 app.mount('#app');
